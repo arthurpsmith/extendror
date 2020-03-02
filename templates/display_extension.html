@@ -12,7 +12,8 @@
     </ul>
 
     {% if parent != '' %}
-    <div>Parent: <a href="/extension/{{ror_id}}/{{parent}}">{{metadata[parent]['name']}}</a>
+    <h3>Parent:</h3>
+    <div><a href="/extension/{{ror_id}}/{{parent}}">{{metadata[parent]['name']}}</a>
       {% if 'ror_id' in metadata[parent] %}
         - ROR <a href="https://ror.org/{{metadata[parent]['ror_id']}}">https://ror.org/{{metadata[parent]['ror_id']}}</a>
       {% endif %}
