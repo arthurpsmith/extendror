@@ -49,7 +49,10 @@ def extension(id):
                 if (len(row) > 0) and (row[0] != 'id'):
                     orgs_metadata[row[0]] = {'id': row[0], 'name': row[1]}
                     if (len(row) > 4) and row[4] != '':
-                        orgs_metadata[row[0]]['ror_id'] = row[4]
+                        this_ror = row[4]
+			if this_ror.startswith('https'):
+                            this_ror = this_ror[16:]
+                        orgs_metadata[row[0]]['ror_id'] = this_ror
         with urllib.request.urlopen(data_source + "parents.csv") as parentsdata:
             parentsreader = csv.reader(parentsdata.read().decode('utf-8').split("\n"))
             for row in parentsreader: # should account for multiple parents properly...
