@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import urllib.request
 #import rdflib
 import csv
+import ror_data
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -35,6 +36,7 @@ def extension_test(id):
 def extension(id):
     id_parts = id.split('/')
     ror_id = id_parts[0]
+    ror_root_metadata = ror_data.metadata_for_ror(ror_id)
     extension = ''
     if (len(id_parts) > 1):
         extension = id_parts[1]
@@ -66,13 +68,18 @@ def extension(id):
 
     parent = ''
     children = []
+    ror_self_metadata = {}
+    
     if extension in orgs_metadata:
         if 'parent' in orgs_metadata[extension]:
             parent = orgs_metadata[extension]['parent']
         if 'children' in orgs_metadata[extension]:
             children = orgs_metadata[extension]['children']
+        if 'ror_id' in orgs_metadata[extension]:
+            ror_self_metadata = ror_data.metadata_for_ror(orgs_metadata[extension]['ror_id'])
 
     return render_template('display_extension.html', ror_id=ror_id,
             extension=extension, parent=parent, children=children,
-            metadata=orgs_metadata)
+            metadata=orgs_metadata, ror_root=ror_root_metadata,
+            ror_self=ror_self_metadata)
 

@@ -1,8 +1,15 @@
 <html><head><title>ROR Extension for {{ror_id}}/{{extension}}</title></head>
 <body>
     <h1>ROR Extension for {{ror_id}}/{{extension}}</h1>
+    {% if 'name' in ror_root %}
+      <h2>{{ror_root['name']}}</h2>
+    {% endif %}
     {% if extension in metadata %}
       <h2>{{metadata[extension]['name']}}</h2>
+      {% if 'ror_id' in metadata[extension] %}
+        <div>ROR: <a href="https://ror.org/{{metadata[extension]['ror_id']}}">https://ror.org/{{metadata[extension]['ror_id']}}</a></div>
+        <div>Name in ROR: {{ror_self['name']]}}</div>
+      {% endif %}
     {% endif %}
     <h3>Children:</h3>
     <ul>
