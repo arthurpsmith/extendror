@@ -8,7 +8,9 @@
       <h2>{{metadata[extension]['name']}}</h2>
       {% if 'ror_id' in metadata[extension] %}
         <div>ROR: <a href="https://ror.org/{{metadata[extension]['ror_id']}}">https://ror.org/{{metadata[extension]['ror_id']}}</a></div>
-        <div>Name in ROR: {{ror_self['name']]}}</div>
+        {% if 'name' in ror_self %}
+          <div> Name in ROR: {{ror_self['name']}}</div>
+        {% endif %}
       {% endif %}
     {% endif %}
     <h3>Children:</h3>
