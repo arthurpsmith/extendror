@@ -7,7 +7,10 @@ import ror_data
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
-known_extensions = {'03vek6s52': 'https://raw.githubusercontent.com/csgrant00/ror-extend-demo/master/examples/harvard/'}
+known_extensions = {
+  '03vek6s52': 'https://raw.githubusercontent.com/csgrant00/ror-extend-demo/master/examples/harvard/',
+  '05rrcem69': 'https://raw.githubusercontent.com/csgrant00/ror-extend-demo/master/examples/ucdavis/'
+}
 
 @app.route('/')
 def hello_world():
