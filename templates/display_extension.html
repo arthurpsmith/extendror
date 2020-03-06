@@ -9,7 +9,20 @@
       {% if 'ror_id' in metadata[extension] %}
         <div>ROR: <a href="https://ror.org/{{metadata[extension]['ror_id']}}">https://ror.org/{{metadata[extension]['ror_id']}}</a></div>
         {% if 'name' in ror_self %}
-          <div> Name in ROR: {{ror_self['name']}}</div>
+          <div> <b>Name in ROR:</b> {{ror_self['name']}}</div>
+        {% endif %}
+        {% if 'country' in ror_self %}
+          <div><b>Country:</b> {{ror_self['country']['country_name']}}</div>
+        {% endif %}
+        {% if 'links' in ror_self %}
+          <div><b>Links:</b>
+          {% for link in ror_self['links'] %}
+            <a href="{{link}}">{{link}}</a></li>
+          {% endfor %}
+          </div>
+        {% endif %}
+        {% if 'wikipedia_url' in ror_self %}
+          <div><a href="{{ror_self['wikipedia_url']}}">Wikipedia</a></div>
         {% endif %}
       {% endif %}
     {% endif %}
