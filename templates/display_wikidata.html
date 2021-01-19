@@ -2,7 +2,7 @@
 <body>
     <h1><a href="/">ROR Wikidata Extension</a> for {{ror_id}}/{{extension}}</h1>
     {% if extension|string() != '' %}
-      <h2>{{metadata['name']}}</h2>
+      <h2><a href="https://www.wikidata.org/wiki/{{extension}}">{{metadata['name']}}</a></h2>
       {% if metadata['ror_id']|string() != '' %}
         <div>ROR: <a href="https://ror.org/{{metadata['ror_id']}}">https://ror.org/{{metadata['ror_id']}}</a></div>
         {% if 'name' in ror_self %}
