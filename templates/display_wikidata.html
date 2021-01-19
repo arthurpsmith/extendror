@@ -1,6 +1,6 @@
 <html><head><title>ROR Wikidata Extension for {{ror_id}}/{{extension}}</title></head>
 <body>
-    <h1>ROR Wikidata Extension for {{ror_id}}/{{extension}}</h1>
+    <h1><a href="/">ROR Wikidata Extension</a> for {{ror_id}}/{{extension}}</h1>
     {% if extension|string() != '' %}
       <h2>{{metadata['name']}}</h2>
       {% if metadata['ror_id']|string() != '' %}
@@ -23,23 +23,35 @@
         {% endif %}
       {% endif %}
     {% endif %}
+    {% if children|length > 0 %}
     <h3>Children:</h3>
     <ul>
         {% for child in children %}
           <li><a href="/wikidata/{{ror_id}}/{{child['id']}}">{{child['name']}}</a></li>
         {% endfor %}
     </ul>
+    {% else %}
+    <div>This ID has no child records.</div>
+    {% endif %}
 
-    {% if metadata['parent_id']|string() != '' %}
-    <h3>Parent:</h3>
-    <div><a href="/wikidata/{{ror_id}}/{{metadata['parent_id']}}">{{metadata['parent_name']}}</a>
+    {% if extension|string() == '' or ror_id|string() == metadata['ror_id']|string() %}
       {% if metadata['parent_ror_id']|string() != '' %}
-        - ROR <a href="https://ror.org/{{metadata['parent_ror_id']}}">https://ror.org/{{metadata['parent_ror_id']}}</a>
+      <h3>Parent:</h3>
+        <div><a href="/wikidata/{{metadata['parent_ror_id']}}/{{metadata['parent_id']}}">{{metadata['parent_name']}}</a>
       {% endif %}
-    </div>
+    {% else %}
+      {% if metadata['parent_id']|string() != '' %}
+      <h3>Parent:</h3>
+      <div><a href="/wikidata/{{ror_id}}/{{metadata['parent_id']}}">{{metadata['parent_name']}}</a>
+        {% if metadata['parent_ror_id']|string() != '' %}
+          - ROR <a href="https://ror.org/{{metadata['parent_ror_id']}}">https://ror.org/{{metadata['parent_ror_id']}}</a>
+        {% endif %}
+      </div>
+      {% endif %}
     {% endif %}
 
     {% if 'name' in ror_root %}
-      <h2><a href="https://ror.org/{{ror_id}}">{{ror_root['name']}}</a></h2>
+      <h2><a href="/wikidata/{{ror_id}}">{{ror_root['name']}}</a> - 
+      <a href="https://ror.org/{{ror_id}}">ROR</a></h2>
     {% endif %}
 </body></html>

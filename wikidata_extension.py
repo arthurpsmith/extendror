@@ -20,11 +20,27 @@ def wikidata_metadata(id):
     if extension == '':
         # Fetch all children of ror_id from Wikidata:
         sparql.setQuery("""
-SELECT DISTINCT ?item ?itemLabel WHERE {{
+SELECT DISTINCT ?parent ?item ?itemLabel WHERE {{
   ?parent wdt:P6782 '{0}' ; wdt:P355|wdt:P527 ?item .
   SERVICE wikibase:label {{ bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }}
 }} ORDER BY ?itemLabel
 """.format(ror_id))
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+        parent_item = ''
+        for result in results['results']['bindings']:
+            item = result['item']['value']
+            parent_item = result['parent']['value']
+            name = result['itemLabel']['value']
+            qid_match = qid_pattern.search(item)
+            if qid_match:
+                qid = qid_match.group(0)
+                children.append({'id': qid, 'name': name})
+        qid_match = qid_pattern.search(parent_item)
+        if qid_match:
+            extension = qid_match.group(0)
+            self_metadata = wikidata_self_metadata(extension)
+            ror_self_metadata = ror_root_metadata
     else:
         self_metadata = wikidata_self_metadata(extension)
         self_ror_id = self_metadata['ror_id']
@@ -37,16 +53,15 @@ SELECT DISTINCT ?item ?itemLabel WHERE {{
   SERVICE wikibase:label {{ bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }}
 }} ORDER BY ?itemLabel
 """.format(extension))
-
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
-    for result in results['results']['bindings']:
-        item = result['item']['value']
-        name = result['itemLabel']['value']
-        qid_match = qid_pattern.search(item)
-        if qid_match:
-            qid = qid_match.group(0)
-            children.append({'id': qid, 'name': name})
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+        for result in results['results']['bindings']:
+            item = result['item']['value']
+            name = result['itemLabel']['value']
+            qid_match = qid_pattern.search(item)
+            if qid_match:
+                qid = qid_match.group(0)
+                children.append({'id': qid, 'name': name})
 
     return {
             'ror_id': ror_id,
@@ -98,15 +113,16 @@ SELECT DISTINCT ?itemLabel ?ror_id ?parent ?parentLabel ?parent_ror_id  WHERE {{
       self_metadata['ror_id'] = result['ror_id']['value']
     else:
       self_metadata['ror_id'] = ''
-    parent_item = result['parent']['value']
-    parent_match = re.search(r'Q\d+$', parent_item)
-    if parent_match:
-        self_metadata['parent_id'] = parent_match.group(0)
-    else:
-        self_metadata['parent_id'] = None
-    self_metadata['parent_name'] = result['parentLabel']['value']
-    if 'parent_ror_id' in result:
-        self_metadata['parent_ror_id'] = result['parent_ror_id']['value']
-    else:
-        self_metadata['parent_ror_id'] = ''
+    if 'parent' in result:
+      parent_item = result['parent']['value']
+      parent_match = re.search(r'Q\d+$', parent_item)
+      if parent_match:
+          self_metadata['parent_id'] = parent_match.group(0)
+      else:
+          self_metadata['parent_id'] = None
+      self_metadata['parent_name'] = result['parentLabel']['value']
+      if 'parent_ror_id' in result:
+          self_metadata['parent_ror_id'] = result['parent_ror_id']['value']
+      else:
+          self_metadata['parent_ror_id'] = ''
     return self_metadata
