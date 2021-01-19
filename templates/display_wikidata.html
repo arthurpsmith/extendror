@@ -1,0 +1,45 @@
+<html><head><title>ROR Wikidata Extension for {{ror_id}}/{{extension}}</title></head>
+<body>
+    <h1>ROR Wikidata Extension for {{ror_id}}/{{extension}}</h1>
+    {% if extension|string() != '' %}
+      <h2>{{metadata['name']}}</h2>
+      {% if metadata['ror_id']|string() != '' %}
+        <div>ROR: <a href="https://ror.org/{{metadata['ror_id']}}">https://ror.org/{{metadata['ror_id']}}</a></div>
+        {% if 'name' in ror_self %}
+          <div> <b>Name in ROR:</b> {{ror_self['name']}}</div>
+        {% endif %}
+        {% if 'country' in ror_self %}
+          <div><b>Country:</b> {{ror_self['country']['country_name']}}</div>
+        {% endif %}
+        {% if 'links' in ror_self %}
+          <div><b>Links:</b>
+          {% for link in ror_self['links'] %}
+            <a href="{{link}}">{{link}}</a></li>
+          {% endfor %}
+          </div>
+        {% endif %}
+        {% if 'wikipedia_url' in ror_self %}
+          <div><a href="{{ror_self['wikipedia_url']}}">Wikipedia</a></div>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+    <h3>Children:</h3>
+    <ul>
+        {% for child in children %}
+          <li><a href="/wikidata/{{ror_id}}/{{child['id']}}">{{child['name']}}</a></li>
+        {% endfor %}
+    </ul>
+
+    {% if metadata['parent_id']|string() != '' %}
+    <h3>Parent:</h3>
+    <div><a href="/wikidata/{{ror_id}}/{{metadata['parent_id']}}">{{metadata['parent_name']}}</a>
+      {% if metadata['parent_ror_id']|string() != '' %}
+        - ROR <a href="https://ror.org/{{metadata['parent_ror_id']}}">https://ror.org/{{metadata['parent_ror_id']}}</a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if 'name' in ror_root %}
+      <h2><a href="https://ror.org/{{ror_id}}">{{ror_root['name']}}</a></h2>
+    {% endif %}
+</body></html>

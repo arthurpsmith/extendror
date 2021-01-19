@@ -1,0 +1,11 @@
+<html><head>
+    <title>ROR Departmental Extension - Error!</title>
+</head>
+<body>
+<h1>ROR Departmental Extension - Error!</h1>
+<div>The page you requested is not available.</div>
+{% if error|string() == 'Unrelated' %}
+      <div>Reason: No parent/child relation could be found between the ROR ID and Wikidata ID supplied.</div>
+{% endif %}
+
+</body></html>
