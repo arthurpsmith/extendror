@@ -3,13 +3,13 @@ import csv
 import ror_data
 
 known_extensions = {
-  '03vek6s52': 'https://raw.githubusercontent.com/csgrant00/ror-extend-demo/master/examples/harvard/',
-  '05rrcem69': 'https://raw.githubusercontent.com/csgrant00/ror-extend-demo/master/examples/ucdavis/',
-  '04zaypm56': 'https://raw.githubusercontent.com/arthurpsmith/ror-extend-demo/master/examples/cnr_it/',
-  '0447fe631': 'https://raw.githubusercontent.com/arthurpsmith/ror-extend-demo/master/examples/dod_us/',
-  '01bj3aw27': 'https://raw.githubusercontent.com/arthurpsmith/ror-extend-demo/master/examples/doe_us/',
-  '01hhn8329': 'https://raw.githubusercontent.com/arthurpsmith/ror-extend-demo/master/examples/maxplanck/',
-  '05qrfxd25': 'https://raw.githubusercontent.com/arthurpsmith/ror-extend-demo/master/examples/ras_ru/'
+  '03vek6s52': 'https://raw.githubusercontent.com/ucd-library/ror-extend-demo/master/orgs/harvard.edu/',
+  '05rrcem69': 'https://raw.githubusercontent.com/ucd-library/ror-extend-demo/master/orgs/ucdavis.edu/csv/',
+  '04zaypm56': 'https://raw.githubusercontent.com/ucd-library/ror-extend-demo/master/orgs/cfa.harvard.edu/cnr_it/',
+  '0447fe631': 'https://raw.githubusercontent.com/ucd-library/ror-extend-demo/master/orgs/cfa.harvard.edu/dod_us/',
+  '01bj3aw27': 'https://raw.githubusercontent.com/ucd-library/ror-extend-demo/master/orgs/cfa.harvard.edu/doe_us/',
+  '01hhn8329': 'https://raw.githubusercontent.com/ucd-library/ror-extend-demo/master/orgs/cfa.harvard.edu/maxplanck/',
+  '05qrfxd25': 'https://raw.githubusercontent.com/ucd-library/ror-extend-demo/master/orgs/cfa.harvard.edu/ras_ru/'
 }
 
 def github_metadata(id):
