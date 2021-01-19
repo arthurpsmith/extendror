@@ -1,0 +1,21 @@
+<html><head><title>ROR Wikidata Search Results</title></head>
+<body>
+    <h1><a href="/wikidata">ROR Wikidata</a> Search Results</h1>
+    {% if matches|length > 0 %}
+    <h2>Matching entries:</h2>
+    <ul>
+        {% for match in matches%}
+          <li><a href="/wikidata/{{match['ror_id']}}/{{match['id']}}">
+               {{match['ror_id']}}/{{match['id']}}</a> - {{match['name']}}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div>No matches found for search.</div>
+    {% endif %}
+  <div>
+    <form action="/wd_search">
+      <input name="query">
+      <input type="submit" value="Search">
+    </form>
+  </div>
+</body></html>

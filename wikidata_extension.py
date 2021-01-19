@@ -62,7 +62,6 @@ SELECT DISTINCT ?item ?itemLabel WHERE {{
             if qid_match:
                 qid = qid_match.group(0)
                 children.append({'id': qid, 'name': name})
-
     return {
             'ror_id': ror_id,
             'extension': extension,
@@ -126,3 +125,35 @@ SELECT DISTINCT ?itemLabel ?ror_id ?parent ?parentLabel ?parent_ror_id  WHERE {{
       else:
           self_metadata['parent_ror_id'] = ''
     return self_metadata
+
+
+# Perform a search using WDQS and wikibase EntitySearch api
+def search(query):
+    matches = []
+    qid_pattern = re.compile(r'Q\d+$')
+    sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
+    sparql.setQuery("""
+SELECT ?item ?itemLabel ?ror_id WHERE {{
+  hint:Query hint:optimizer "None" .
+  SERVICE wikibase:mwapi {{
+    bd:serviceParam wikibase:api "EntitySearch";
+                    wikibase:endpoint "www.wikidata.org";
+                    mwapi:search "{0}" ;
+                    mwapi:language "en" .
+      ?item wikibase:apiOutputItem mwapi:item .
+  }}
+  ?item (wdt:P361/wdt:P749)*/wdt:P6782 ?ror_id .
+  SERVICE wikibase:label {{ bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }}
+}}
+""".format(query))
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+    for result in results['results']['bindings']:
+        item = result['item']['value']
+        name = result['itemLabel']['value']
+        ror_id = result['ror_id']['value']
+        qid_match = qid_pattern.search(item)
+        if qid_match:
+            qid = qid_match.group(0)
+            matches.append({'id': qid, 'name': name, 'ror_id': ror_id})
+    return matches

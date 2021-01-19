@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, request, render_template
 import github_extension
 import wikidata_extension
 
@@ -21,3 +21,12 @@ def wd_extension(id):
     if 'error' in wdm:
         return render_template('error_page.html', **wdm)
     return render_template('display_wikidata.html', **wdm)
+
+@app.route('/wikidata')
+def wd_home():
+    return render_template('wikidata_main.html')
+
+@app.route('/wd_search')
+def wd_search():
+    res = wikidata_extension.search(request.args.get('query'))
+    return render_template('wikidata_search_results.html', matches=res)
