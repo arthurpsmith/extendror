@@ -41,11 +41,14 @@ SELECT DISTINCT ?parent ?item ?itemLabel WHERE {{
             extension = qid_match.group(0)
             self_metadata = wikidata_self_metadata(extension)
             ror_self_metadata = ror_root_metadata
+        self_metadata['is_top_level'] = True
     else:
         self_metadata = wikidata_self_metadata(extension)
         self_ror_id = self_metadata['ror_id']
         if self_ror_id != '':
             ror_self_metadata = ror_data.metadata_for_ror(self_ror_id)
+            if self_ror_id == ror_id:
+                self_metadata['is_top_level'] = True
         # Fetch all children of extension id from Wikidata:
         sparql.setQuery("""
 SELECT DISTINCT ?item ?itemLabel WHERE {{
@@ -112,18 +115,23 @@ SELECT DISTINCT ?itemLabel ?ror_id ?parent ?parentLabel ?parent_ror_id  WHERE {{
       self_metadata['ror_id'] = result['ror_id']['value']
     else:
       self_metadata['ror_id'] = ''
-    if 'parent' in result:
-      parent_item = result['parent']['value']
-      parent_match = re.search(r'Q\d+$', parent_item)
-      if parent_match:
-          self_metadata['parent_id'] = parent_match.group(0)
-      else:
-          self_metadata['parent_id'] = None
-      self_metadata['parent_name'] = result['parentLabel']['value']
-      if 'parent_ror_id' in result:
-          self_metadata['parent_ror_id'] = result['parent_ror_id']['value']
-      else:
-          self_metadata['parent_ror_id'] = ''
+    parents = []
+    has_ror_parent = False
+    for result in results['results']['bindings']:
+      if 'parent' in result:
+        parent_item = result['parent']['value']
+        parent_match = re.search(r'Q\d+$', parent_item)
+        parent_id = None
+        if parent_match:
+            parent_id = parent_match.group(0)
+        parent_name = result['parentLabel']['value']
+        parent_ror_id = ''
+        if 'parent_ror_id' in result:
+          parent_ror_id = result['parent_ror_id']['value']
+          has_ror_parent = True
+        parents.append({'id': parent_id, 'name': parent_name, 'ror_id': parent_ror_id})
+    self_metadata['parents'] = parents
+    self_metadata['has_ror_parent'] = has_ror_parent
     return self_metadata
 
 

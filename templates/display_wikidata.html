@@ -34,24 +34,36 @@
     <div>This ID has no child records.</div>
     {% endif %}
 
-    {% if extension|string() == '' or ror_id|string() == metadata['ror_id']|string() %}
-      {% if metadata['parent_ror_id']|string() != '' %}
-      <h3>Parent:</h3>
-        <div><a href="/wikidata/{{metadata['parent_ror_id']}}/{{metadata['parent_id']}}">{{metadata['parent_name']}}</a>
-      {% endif %}
-    {% else %}
-      {% if metadata['parent_id']|string() != '' %}
-      <h3>Parent:</h3>
-      <div><a href="/wikidata/{{ror_id}}/{{metadata['parent_id']}}">{{metadata['parent_name']}}</a>
-        {% if metadata['parent_ror_id']|string() != '' %}
-          - ROR <a href="https://ror.org/{{metadata['parent_ror_id']}}">https://ror.org/{{metadata['parent_ror_id']}}</a>
+    {% if metadata['parents']|length > 0 %}
+      {% if metadata['is_top_level'] %}
+        {% if metadata['has_ror_parent'] %}
+          <h3>Parent(s):</h3>
+          {% for parent in metadata['parents'] %}
+            {% if parent['ror_id']|string() != '' %}
+              <div>
+              <a href="/wikidata/{{parent['ror_id']}}/{{parent['id']}}">{{parent['name']}}</a>
+              - ROR <a href="https://ror.org/{{parent['ror_id']}}">https://ror.org/{{parent['ror_id']}}</a>
+              </div>
+            {% endif %}
+          {% endfor %}
         {% endif %}
-      </div>
+      {% else %}
+        <h3>Parent(s):</h3>
+          {% for parent in metadata['parents'] %}
+            {% if parent['ror_id']|string() != '' %}
+              <div>
+               <a href="/wikidata/{{parent['ror_id']}}/{{parent['id']}}">{{parent['name']}}</a>
+              - ROR <a href="https://ror.org/{{parent['ror_id']}}">https://ror.org/{{parent['ror_id']}}</a>
+              </div>
+            {% else %}
+              <div><a href="/wikidata/{{ror_id}}/{{parent['id']}}">{{parent['name']}}</a></div>
+            {% endif %}
+          {% endfor %}
       {% endif %}
     {% endif %}
 
     {% if 'name' in ror_root %}
-      <h2><a href="/wikidata/{{ror_id}}">{{ror_root['name']}}</a> - 
-      <a href="https://ror.org/{{ror_id}}">ROR</a></h2>
+      <h2>Extension root: <a href="/wikidata/{{ror_id}}">{{ror_root['name']}}</a> - 
+      <a href="https://ror.org/{{ror_id}}">https://ror.org/{{ror_id}}</a></h2>
     {% endif %}
 </body></html>
