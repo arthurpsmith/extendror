@@ -100,7 +100,9 @@
         <div class="row">
           <div class="col-md-3">City, State</div>
           <div class="col-md-9">
-            {{ address['city'] }}, {{ address['state'] }} [{{ address['state_code'] }}]
+            {{ address['city'] }}{% if address['state'] is not none %},
+              {{ address['state'] }} [{{ address['state_code'] }}]
+            {% endif %}
           </div>
         </div>
         {% if address['postcode'] is not none %}
