@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template
 import github_extension
 import wikidata_extension
+import ror_data
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -30,3 +31,14 @@ def wd_home():
 def wd_search():
     res = wikidata_extension.search(request.args.get('query'))
     return render_template('wikidata_search_results.html', matches=res)
+
+@app.route('/ror/<path:id>')
+def display_ror(id):
+    rorm = ror_data.metadata_for_ror(id)
+    if 'error' in rorm:
+        return render_template('error_page.html', **rorm)
+    return render_template('display_ror.html', **rorm)
+
+@app.route('/ror')
+def ror_home():
+    return render_template('ror_main.html')
