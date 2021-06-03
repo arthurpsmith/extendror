@@ -60,22 +60,6 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">Email address:</div>
-          <div classs="col-md-8">
-             {% if email_address is not none %}
-                {{ email_address }}
-             {% endif %}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">IP addresses:</div>
-          <div classs="col-md-8">
-            {% for ip_address in ip_addresses  %}
-                {{ ip_address }}
-            {% endfor %}
-          </div>
-        </div>
-        <div class="row">
           <div class="col-md-4">
             <h6 class="mt-3 mb-0">Established</h6>
             <span class="text-default">{{ established }}</span>
@@ -109,12 +93,6 @@
           <div class="row">
             <div class="col-md-3">Postal Code</div>
             <div class="col-md-9">{{ address['postcode'] }}</div>
-          </div>
-        {% endif %}
-        {% if address['line'] is not none %}
-          <div class="row">
-            <div class="col-md-3">Line</div>
-            <div class="col-md-9">{{ address['line'] }}</div>
           </div>
         {% endif %}
         <div class="row">
