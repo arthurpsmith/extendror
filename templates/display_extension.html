@@ -33,13 +33,15 @@
         {% endfor %}
     </ul>
 
-    {% if parent != '' %}
-    <h3>Parent:</h3>
-    <div><a href="/extension/{{ror_id}}/{{parent}}">{{metadata[parent]['name']}}</a>
-      {% if 'ror_id' in metadata[parent] %}
-        - ROR <a href="https://ror.org/{{metadata[parent]['ror_id']}}">https://ror.org/{{metadata[parent]['ror_id']}}</a>
-      {% endif %}
-    </div>
+    {% if parents|length > 0 %}
+    <h3>Parent(s):</h3>
+      {% for parent in parents %}
+        <div><a href="/extension/{{ror_id}}/{{parent}}">{{metadata[parent]['name']}}</a>
+        {% if 'ror_id' in metadata[parent] %}
+          - ROR <a href="https://ror.org/{{metadata[parent]['ror_id']}}">https://ror.org/{{metadata[parent]['ror_id']}}</a>
+        {% endif %}
+        </div>
+      {% endfor %}
     {% else %}
       <div>Root ROR: <a href="https://ror.org/{{ror_id}}">https://ror.org/{{ror_id}}</a></div>
     {% endif %}

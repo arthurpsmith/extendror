@@ -40,7 +40,9 @@ def github_metadata(id):
                     parent_id = row[1]
                     if child_id not in orgs_metadata:
                         orgs_metadata[child_id] = {'id': child_id, 'name': child_id}
-                    orgs_metadata[child_id]['parent'] = parent_id
+                    if 'parents' not in orgs_metadata[child_id]:
+                        orgs_metadata[child_id]['parents'] = []
+                    orgs_metadata[child_id]['parents'].append(parent_id)
                     if parent_id not in orgs_metadata:
                         orgs_metadata[parent_id] = {'id': parent_id, 'name': parent_id,
                             'ror_id': ror_id}
@@ -48,13 +50,13 @@ def github_metadata(id):
                         orgs_metadata[parent_id]['children'] = []
                     orgs_metadata[parent_id]['children'].append(child_id)
 
-    parent = ''
+    parents = []
     children = []
     ror_self_metadata = {}
     
     if extension in orgs_metadata:
-        if 'parent' in orgs_metadata[extension]:
-            parent = orgs_metadata[extension]['parent']
+        if 'parents' in orgs_metadata[extension]:
+            parents = orgs_metadata[extension]['parents']
         if 'children' in orgs_metadata[extension]:
             children = orgs_metadata[extension]['children']
         if 'ror_id' in orgs_metadata[extension]:
@@ -63,7 +65,7 @@ def github_metadata(id):
     return {
             'ror_id': ror_id,
             'extension': extension,
-            'parent': parent,
+            'parents': parents,
             'children': children,
             'metadata': orgs_metadata,
             'ror_root': ror_root_metadata,
